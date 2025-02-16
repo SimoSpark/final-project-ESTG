@@ -5,19 +5,29 @@ function CategoryList({ categoryList }) {
     return (
         <div className='mx-4 md:mx-22 lg:mx-52 grid grid-cols-3
         md:grid-cols-4 lg:grid-cols-7 gap-4'>
-            {categoryList.map((category, index) => (
+            {categoryList.length > 0 ? categoryList.map((category, index) => (
 
-                <div className='flex flex-col items-center justify-center gap-2 p-5 rounded cursor-pointer hover:scale-110 transition-all ease-in-out'
-                    style={{ backgroundColor: category.bgcolor.hex }}
-                    key={category.id || index}>
+                <div className={`flex flex-col items-center
+    justify-center gap-2
+    bg-blue-50 p-5 rounded-lg
+    cursor-pointer hover:scale-110 transition-all ease-in-out
+    `}
+                    key={index}>
                     <Image src={category.icon.url}
                         alt='icon'
-                        width={30}
-                        height={30}
+                        width={40}
+                        height={40}
                     />
-                    <h2>{category.name}</h2>
+                   <h2 className='text-primary'>{category.name}</h2>
                 </div>
-            ))}
+            )) :
+                [1, 2, 3, 4, 5, 6, 7].map((item, index) => (
+                    <div key={index} className='h-[120px]
+              w-full bg-slate-200 animate-pulse
+              rounded-lg'>
+
+                    </div>))
+            }
         </div>
     )
 }
