@@ -35,7 +35,8 @@ export default function Home() {
       <Hero />
       <CategoryList categoryList={categoryList} />
       <BusinessList businessList={businessList} title={'Services Populaires'} />
-      <Footer />  {/* Add the Footer component here */}
+      <Footer /> 
+      {/* footer */}
     </div>
   );
 }
