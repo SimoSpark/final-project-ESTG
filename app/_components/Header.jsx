@@ -3,15 +3,6 @@ import { Button } from '@/components/ui/button'
 import { signIn, signOut, useSession } from 'next-auth/react'
 import Image from 'next/image'
 import React, { useEffect } from 'react'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-
 function Header() {
   const { data } = useSession();
   useEffect(() => {
@@ -27,34 +18,7 @@ function Header() {
           <h2 className='hover:scale-105 hover:text-primary cursor-pointer'>à propos de nous</h2>
         </div>
       </div>
-      <div>
-        {data?.user ?
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Image src={data?.user?.image}
-                alt='user'
-                width={40}
-                height={40}
-                className='rounded-full'
-              />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                Mes Réservations
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => signOut()}>Se Déconnecter</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          :
-
           <Button onClick={() => signIn('descope')}>Login / Sign Up</Button>
-
-        }
-      </div>
     </div>
   )
 }
