@@ -8,7 +8,6 @@ import CategoryList from "./_components/CategoryList";
 import BusinessList from "./_components/BusinessList";
 import Footer from "./_components/Footer";
 
-
 export default function Home() {
   const [categoryList, setCategoryList] = useState([]);
   const [businessList, setBusinessList] = useState([]);
@@ -35,7 +34,7 @@ export default function Home() {
       <Hero />
       <CategoryList categoryList={categoryList} />
       <BusinessList businessList={businessList} title={'Services Populaires'} />
-      <Footer /> 
+      <Footer />
       {/* footer */}
     </div>
   );
