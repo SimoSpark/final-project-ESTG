@@ -2,19 +2,20 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import React from 'react';
 import { Star, MapPin, Phone } from 'lucide-react';
+import Link from 'next/link';
 
 function BusinessList({ businessList, title }) {
   return (
     <div className='mt-5'>
       <h2 className='font-bold text-[25px]'>{title}</h2>
-      
+
       <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-5'>
         {businessList.length > 0 ? businessList.map((business, index) => (
-          <div 
-            key={index} 
+          <Link href={'/details/' + business.id}
+            key={index}
             className='shadow-md rounded-lg hover:shadow-lg cursor-pointer hover:shadow-primary hover:scale-105 transition-all ease-in-out relative'
           >
-            <Image 
+            <Image
               src={business?.images[0].url}
               alt={business.name}
               width={500}
@@ -42,15 +43,15 @@ function BusinessList({ businessList, title }) {
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-green-500" />
                 <span className="text-gray-700 line-clamp-1">{business.address}</span>
-              </div> 
+              </div>
 
               <Button className='rounded-lg mt-3'>Book Now</Button>
             </div>
-          </div>
+          </Link>
         )) :
           [1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className='w-full h-[300px] bg-slate-200 rounded-lg animate-pulse'>
             </div>
           ))
