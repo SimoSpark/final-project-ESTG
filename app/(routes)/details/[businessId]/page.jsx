@@ -1,43 +1,43 @@
 "use client"
+import { signIn, useSession } from 'next-auth/react'
+import React, { useEffect, useState, use } from 'react'
+import BusinessInfo from '../_components/BusinessInfo';
 import GlobalApi from '@/app/_Services/GlobalApi';
-import { signIn, useSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react'
 
-function BusinessDetail(params) {
-    const {data,status}=useSession();
-    const [business,setBusiness]=useState([]);
-    useEffect(()=>{
-      params&&getbusinessById();
-    },[params]);
+function BusinessDetail(props) {
+    const params = use(props.params);
+    const { data, status } = useSession();
+    const [business, setBusiness] = useState([]);
 
-    useEffect(()=>{
-      checkUserAuth();
-    },[]);
+    useEffect(() => {
+        if (params?.businessId) getbusinessById();
+    }, [params]);
 
-    const getbusinessById=()=>{
-      GlobalApi.getBusinessById(params.businessId).then(resp=>{
-       setBusiness(resp.businessList);
-      })
-    }
+    useEffect(() => {
+        checkUserAuth();
+    }, []);
 
-    const checkUserAuth=()=>{
-      if(status=='loading')
-      {
-          return <p>Loading...</p>
-      }
-  
-      if(status=='unauthenticated')
-      {
-          signIn('descope');
-      }
-  
-    }
+    const getbusinessById = () => {
+        GlobalApi.getBusinessById(params.businessId).then(resp => {
+            setBusiness(resp.businessList);
+        });
+    };
 
-    return status == 'authenticated' && (
-        <div>businessddddd</div>
-    )
+    const checkUserAuth = () => {
+        if (status === 'loading') {
+            return <p>Loading...</p>;
+        }
 
+        if (status === 'unauthenticated') {
+            signIn('descope');
+        }
+    };
+
+    return status === 'authenticated' && business && (
+        <div className='py-8 md:py-20 px-10 md:px-36'>
+            <BusinessInfo business={business} />
+        </div>
+    );
 }
 
-export default BusinessDetail
-
+export default BusinessDetail;
