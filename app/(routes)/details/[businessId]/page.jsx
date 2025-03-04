@@ -48,7 +48,7 @@ function BusinessDetail(props) {
               <SuggestedBusinessList business={business}/>
               </div>
             </div>
-        
+
         </div>
       )
     }
