@@ -1,19 +1,42 @@
 "use client"
+import GlobalApi from '@/app/_Services/GlobalApi';
 import { signIn, useSession } from 'next-auth/react';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-function BusinessDetail() {
-    const { data, status } = useSession();
-    if (status == 'loading') {
-        return <p>loading...</p>
+function BusinessDetail(params) {
+    const {data,status}=useSession();
+    const [business,setBusiness]=useState([]);
+    useEffect(()=>{
+      params&&getbusinessById();
+    },[params]);
+
+    useEffect(()=>{
+      checkUserAuth();
+    },[]);
+
+    const getbusinessById=()=>{
+      GlobalApi.getBusinessById(params.businessId).then(resp=>{
+       setBusiness(resp.businessList);
+      })
     }
-    if (status == 'unauthenticated') {
-        signIn('descope');
+
+    const checkUserAuth=()=>{
+      if(status=='loading')
+      {
+          return <p>Loading...</p>
+      }
+  
+      if(status=='unauthenticated')
+      {
+          signIn('descope');
+      }
+  
     }
-    return status=='authenticated'&&(
-        <div>business</div>
+
+    return status == 'authenticated' && (
+        <div>businessddddd</div>
     )
-   
+
 }
 
 export default BusinessDetail
