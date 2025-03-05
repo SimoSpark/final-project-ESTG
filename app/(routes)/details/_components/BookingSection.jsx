@@ -45,11 +45,10 @@ function BookingSection({ children }) {
                 </SheetTrigger>
                 <SheetContent className="overflow-auto">
                     <SheetHeader>
-                        <SheetTitle>Book a Service</SheetTitle>
-                     
+                        <SheetTitle>Réserver le service</SheetTitle>
                         <div>
-                            <SheetDescription>
-                                Select Date and Time slot to book a service
+                        <SheetDescription>
+                            Sélectionnez la date et le créneau horaire pour réserver un service
                             </SheetDescription>
                         </div>
 
