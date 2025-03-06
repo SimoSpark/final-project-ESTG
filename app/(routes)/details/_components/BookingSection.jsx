@@ -16,6 +16,7 @@ function BookingSection({children}) {
 
     const [date,setDate]=useState(new Date());
     const [timeSlot,setTimeSlot]=useState([]);
+    const [selectedTime,setSelectedTime]=useState();
     useEffect(()=>{
         getTime();
        
@@ -74,19 +75,30 @@ function BookingSection({children}) {
                 {timeSlot.map((item,index)=>(
                     <Button key={index}
                     variant='outiline'
-                    className='border rounded-full 
-                    p-2 px-3 hover:bg-primary
-                     hover:text-white
-                    '
-                    >{item.time}</Button>
-                ))}
+                    className={`border rounded-full 
+                        p-2 px-3 hover:bg-primary
+                         hover:text-white
+                         ${selectedTime==item.time&&'bg-primary text-white'}`}
+                        onClick={()=>setSelectedTime(item.time)}
+                        >{item.time}</Button>
+                    ))}
             </div>
             
           </SheetDescription>
                     </SheetHeader>
-                    <SheetFooter>
+                    <SheetFooter className="mt-5">
               <SheetClose asChild>
-                <Button type="submit">Book</Button>
+                <div className='flex gap-5'>
+                <Button variant="destructive" 
+                className="">Cancel</Button>
+
+<Button 
+                disabled={!(selectedTime&&date)}
+                onClick={()=>saveBooking()}
+                >
+                    Book</Button>
+                </div>
+             
               </SheetClose>
             </SheetFooter>
                 </SheetContent>
