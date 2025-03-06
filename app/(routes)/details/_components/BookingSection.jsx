@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import {
     Sheet,
+    SheetClose,
     SheetContent,
     SheetDescription,
+    SheetFooter,
     SheetHeader,
     SheetTitle,
     SheetTrigger,
@@ -18,7 +20,7 @@ function BookingSection({children}) {
         getTime();
        
     },[])
-    
+
     const getTime = () => {
         const timeList = [];
         for (let i = 10; i <= 12; i++) {
@@ -50,9 +52,9 @@ function BookingSection({children}) {
       </SheetTrigger>
       <SheetContent className="overflow-auto">
         <SheetHeader>
-          <SheetTitle>Book an Service</SheetTitle>
+          <SheetTitle>Réserver le service</SheetTitle>
           <SheetDescription>
-            Select Date and Time slot to book an service
+          Sélectionnez la date et le créneau horaire pour réserver un service
             {/* Date Picker  */}
     
             <div className='flex flex-col gap-5 items-baseline'>
@@ -82,6 +84,11 @@ function BookingSection({children}) {
             
           </SheetDescription>
                     </SheetHeader>
+                    <SheetFooter>
+              <SheetClose asChild>
+                <Button type="submit">Book</Button>
+              </SheetClose>
+            </SheetFooter>
                 </SheetContent>
             </Sheet>
         </div>
