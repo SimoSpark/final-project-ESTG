@@ -114,5 +114,6 @@ export default {
   getCategory,
   getAllBusinessList,
   getBusinessByCategory,
-  getBusinessById
+  getBusinessById,
+  createNewBooking
 }
