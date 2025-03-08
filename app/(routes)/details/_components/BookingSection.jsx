@@ -59,6 +59,8 @@ function BookingSection({ children,business }) {
 .then(resp => {
   console.log(resp);
   if (resp) {
+    setDate();
+    setSelectedTime('');
     toast('Booking created successfully!');
   }
 })

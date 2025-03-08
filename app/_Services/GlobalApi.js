@@ -104,6 +104,9 @@ const createNewBooking = async (businessId, date, time, userEmail, userName) => 
   ) {
     id
   }
+    publishManyBookings(to: PUBLISHED) {
+    count
+  }
 }
   `
   const result = await request(MASTER_URL, mutationQuery)
