@@ -15,16 +15,29 @@ import GlobalApi from '@/app/_Services/GlobalApi';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 
-function BookingSection({ children,business }) {
+function BookingSection({ children, business }) {
 
     const [date, setDate] = useState(new Date());
     const [timeSlot, setTimeSlot] = useState([]);
     const [selectedTime, setSelectedTime] = useState();
-    const {data}=useSession();
+    const [bookedSlot, setBookedSlot] = useState([]);
+    const { data } = useSession();
     useEffect(() => {
         getTime();
 
     }, [])
+
+    useEffect(() => {
+        date && BusinessBookedSlot();
+    }, [date])
+
+    const BusinessBookedSlot = () => {
+        GlobalApi.BusinessBookedSlot(business.id, date)
+            .then(resp => {
+                console.log(resp)
+                setBookedSlot(resp.bookings)
+            })
+    }
 
     const getTime = () => {
         const timeList = [];
@@ -47,28 +60,31 @@ function BookingSection({ children,business }) {
 
         setTimeSlot(timeList)
     }
-    const saveBooking=()=>{
-     
-  GlobalApi.createNewBooking(
-  business.id, 
-  date,
-  selectedTime, 
-  data.user.email,
-  data.user.name
-)
-.then(resp => {
-  console.log(resp);
-  if (resp) {
-    setDate();
-    setSelectedTime('');
-    toast('Booking created successfully!');
-  }
-})
-.catch(error => {
-  console.error(error);
-  toast('Error while creating booking');
-});
+    const saveBooking = () => {
+
+        GlobalApi.createNewBooking(
+            business.id,
+            date,
+            selectedTime,
+            data.user.email,
+            data.user.name
+        )
+            .then(resp => {
+                console.log(resp);
+                if (resp) {
+                    setDate();
+                    setSelectedTime('');
+                    toast('Booking created successfully!');
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                toast('Error while creating booking');
+            });
     }
+    const isSlotBooked=(time)=>{
+        return bookedSlot.find(item=>item.time==time)
+      }
     return (
         <div>
 
@@ -98,14 +114,15 @@ function BookingSection({ children,business }) {
                             <h2 className='my-5 font-bold'>Select Time Slot</h2>
                             <div className='grid grid-cols-3 gap-3'>
                                 {timeSlot.map((item, index) => (
-                                    <Button key={index}
-                                        variant='outiline'
-                                        className={`border rounded-full 
-                        p-2 px-3 hover:bg-primary
-                         hover:text-white
-                         ${selectedTime == item.time && 'bg-primary text-white'}`}
-                                        onClick={() => setSelectedTime(item.time)}
-                                    >{item.time}</Button>
+                                     <Button key={index}
+                                     disabled={isSlotBooked(item.time)}
+                                     variant='outiline'
+                                     className={`border rounded-full 
+                                     p-2 px-3 hover:bg-primary
+                                      hover:text-white
+                                      ${selectedTime==item.time&&'bg-primary text-white'}`}
+                                     onClick={()=>setSelectedTime(item.time)}
+                                     >{item.time}</Button>
                                 ))}
                             </div>
 
