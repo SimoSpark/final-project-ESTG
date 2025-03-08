@@ -11,12 +11,16 @@ import {
 } from "@/components/ui/sheet"
 import { Calendar } from "@/components/ui/calendar"
 import { Button } from '@/components/ui/button';
+import GlobalApi from '@/app/_Services/GlobalApi';
+import { useSession } from 'next-auth/react';
+import { toast } from 'sonner';
 
-function BookingSection({ children }) {
+function BookingSection({ children,business }) {
 
     const [date, setDate] = useState(new Date());
     const [timeSlot, setTimeSlot] = useState([]);
     const [selectedTime, setSelectedTime] = useState();
+    const {data}=useSession();
     useEffect(() => {
         getTime();
 
@@ -43,7 +47,26 @@ function BookingSection({ children }) {
 
         setTimeSlot(timeList)
     }
-
+    const saveBooking=()=>{
+     
+  GlobalApi.createNewBooking(
+  business.id, 
+  date,
+  selectedTime, 
+  data.user.email,
+  data.user.name
+)
+.then(resp => {
+  console.log(resp);
+  if (resp) {
+    toast('Booking created successfully!');
+  }
+})
+.catch(error => {
+  console.error(error);
+  toast('Error while creating booking');
+});
+    }
     return (
         <div>
 

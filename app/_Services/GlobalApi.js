@@ -91,21 +91,22 @@ const getBusinessById = async (id) => {
   return result;
 }
 
-const createNewBooking=async(businessId,date,time,userEmail,userName)=>{
-  const mutationQuery=gql`
-  mutation CreateBooking {
-    createBooking(
-      data: {bookingStatus: Booked, 
-        business: {connect: {id: "`+businessId+`"}},
-         date: "`+date+`", time: "`+time+`", 
-         userEmail: "`+userEmail+`",
-          userName: "`+userName+`"}
-   ) {
+const createNewBooking = async (businessId, date, time, userEmail, userName) => {
+  const mutationQuery = gql`
+ mutation CreateBooking {
+  createBooking(
+    data: {bookingStatus: booked,
+     businessList: {connect: {id:"`+ businessId + `"}},
+      date: "`+ date + `",
+       time: "`+ time + `", 
+       userEmail:"`+ userEmail + `",
+        userName:"`+ userName + `"}
+  ) {
     id
   }
 }
   `
-  const result=await request(MASTER_URL,mutationQuery)
+  const result = await request(MASTER_URL, mutationQuery)
   return result;
 }
 
