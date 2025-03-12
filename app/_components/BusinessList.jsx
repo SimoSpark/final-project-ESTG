@@ -45,7 +45,7 @@ function BusinessList({ businessList, title }) {
                 <span className="text-gray-700 line-clamp-1">{business.address}</span>
               </div>
 
-              <Button className='rounded-lg mt-3'>Book Now</Button>
+              <Button className='rounded-lg mt-3'>Réservez maintenant</Button>
             </div>
           </Link>
         )) :

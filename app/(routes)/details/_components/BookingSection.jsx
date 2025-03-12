@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Sheet,
     SheetClose,
@@ -8,36 +8,38 @@ import {
     SheetHeader,
     SheetTitle,
     SheetTrigger,
-} from "@/components/ui/sheet"
-import { Calendar } from "@/components/ui/calendar"
+  } from "@/components/ui/sheet"
+
+  import { Calendar } from "@/components/ui/calendar"
 import { Button } from '@/components/ui/button';
 import GlobalApi from '@/app/_Services/GlobalApi';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import moment from 'moment';
 
-function BookingSection({ children, business }) {
+function BookingSection({children,business}) {
 
-    const [date, setDate] = useState(new Date());
-    const [timeSlot, setTimeSlot] = useState([]);
-    const [selectedTime, setSelectedTime] = useState();
-    const [bookedSlot, setBookedSlot] = useState([]);
-    const { data } = useSession();
-    useEffect(() => {
+    const [date,setDate]=useState(new Date());
+    const [timeSlot,setTimeSlot]=useState([]);
+    const [selectedTime,setSelectedTime]=useState();
+    const [bookedSlot,setBookedSlot]=useState([]);
+    const {data}=useSession();
+    useEffect(()=>{
         getTime();
+       
+    },[])
 
-    }, [])
+    useEffect(()=>{
+        date&&BusinessBookedSlot();
+    },[date])
 
-    useEffect(() => {
-        date && BusinessBookedSlot();
-    }, [date])
-
-    const BusinessBookedSlot = () => {
+   
+    const BusinessBookedSlot=()=>{
         GlobalApi.BusinessBookedSlot(business.id,moment(date).format('DD-MMM-yyyy'))
-            .then(resp => {
-                console.log(resp)
-                setBookedSlot(resp.bookings)
-            })
+        .then(resp=>{
+            console.log(resp)
+            setBookedSlot(resp.bookings)
+        })
     }
 
     const getTime = () => {
@@ -58,96 +60,94 @@ function BookingSection({ children, business }) {
                 time: i + ':30 PM'
             })
         }
-
+  
         setTimeSlot(timeList)
-    }
-    const saveBooking = () => {
+      }
 
-        GlobalApi.createNewBooking(
-            business.id,
-            moment(date).format('DD-MMM-YYYY'),
-            selectedTime,
-            data.user.email,
-            data.user.name
-        )
-            .then(resp => {
-                console.log(resp);
-                if (resp) {
-                    setDate();
-                    setSelectedTime('');
-                    toast('Booking created successfully!');
-                }
-            })
-            .catch(error => {
-                console.error(error);
-                toast('Error while creating booking');
-            });
-    }
-    const isSlotBooked = (time) => {
-        return bookedSlot.find(item => item.time == time)
-    }
+      const saveBooking=()=>{
+            GlobalApi.createNewBooking(business.id,
+                moment(date).format('DD-MMM-yyyy'),selectedTime,data.user.email,data.user.name)
+                .then(resp=>{
+                    console.log(resp);
+                    if(resp)
+                    {
+                        setDate();
+                        setSelectedTime('');
+                        toast('Service Booked successfully!')
+                        // Toast Message
+                    }
+                },(e)=>{
+                    toast('Error while creating booking')
+                    //Error Toast Message
+                })
+      }
+
+      const isSlotBooked=(time)=>{
+        return bookedSlot.find(item=>item.time==time)
+      }
     return (
-        <div>
+    <div>
+        
+        <Sheet>
+  <SheetTrigger asChild>
+  {children}
+  </SheetTrigger>
+  <SheetContent className="overflow-auto">
+    <SheetHeader>
+      <SheetTitle>Réserver un service</SheetTitle>
+      <SheetDescription>
+      Sélectionnez la date et le créneau horaire pour réserver un service
+        {/* Date Picker  */}
 
-            <Sheet>
-                <SheetTrigger asChild>
-                    {children}
-                </SheetTrigger>
-                <SheetContent className="overflow-auto">
-                    <SheetHeader>
-                        <SheetTitle>Réserver le service</SheetTitle>
-                        <SheetDescription>
-                            Sélectionnez la date et le créneau horaire pour réserver un service
-                            {/* Date Picker  */}
+        <div className='flex flex-col gap-5 items-baseline'>
+        <h2 className='mt-5 font-bold'>Sélectionnez la date</h2>
 
-                            <div className='flex flex-col gap-5 items-baseline'>
-                                <h2 className='mt-5 font-bold'>Select Date</h2>
+            <Calendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                className="rounded-md border "
+            />
 
-                                <Calendar
-                                    mode="single"
-                                    selected={date}
-                                    onSelect={setDate}
-                                    className="rounded-md border "
-                                />
-
-                            </div>
-                            {/* Time Slot Picker  */}
-                            <h2 className='my-5 font-bold'>Select Time Slot</h2>
-                            <div className='grid grid-cols-3 gap-3'>
-                                {timeSlot.map((item, index) => (
-                                    <Button key={index}
-                                        disabled={isSlotBooked(item.time)}
-                                        variant='outiline'
-                                        className={`border rounded-full 
-                                     p-2 px-3 hover:bg-primary
-                                      hover:text-white
-                                      ${selectedTime == item.time && 'bg-primary text-white'}`}
-                                        onClick={() => setSelectedTime(item.time)}
-                                    >{item.time}</Button>
-                                ))}
-                            </div>
-
-                        </SheetDescription>
-                    </SheetHeader>
-                    <SheetFooter className="mt-5">
-                        <SheetClose asChild>
-                            <div className='flex gap-5'>
-                                <Button variant="destructive"
-                                    className="">Cancel</Button>
-
-                                <Button
-                                    disabled={!(selectedTime && date)}
-                                    onClick={() => saveBooking()}
-                                >
-                                    Book</Button>
-                            </div>
-
-                        </SheetClose>
-                    </SheetFooter>
-                </SheetContent>
-            </Sheet>
         </div>
-    )
+        {/* Time Slot Picker  */}
+        <h2 className='my-5 font-bold'>Sélectionnez un créneau horaire</h2>
+        <div className='grid grid-cols-3 gap-3'>
+            {timeSlot.map((item,index)=>(
+                <Button key={index}
+                disabled={isSlotBooked(item.time)}
+                variant='outiline'
+                className={`border rounded-full 
+                p-2 px-3 hover:bg-primary
+                 hover:text-white
+                 ${selectedTime==item.time&&'bg-primary text-white'}`}
+                onClick={()=>setSelectedTime(item.time)}
+                >{item.time}</Button>
+            ))}
+        </div>
+        
+      </SheetDescription>
+    </SheetHeader>
+    <SheetFooter className="mt-5">
+              <SheetClose asChild>
+                <div className='flex gap-5'>
+                <Button variant="destructive" 
+                className="">Annuler</Button>
+
+                <Button 
+                disabled={!(selectedTime&&date)}
+                onClick={()=>saveBooking()}
+                >
+                   Réserver</Button>
+                </div>
+             
+              </SheetClose>
+            </SheetFooter>
+  </SheetContent>
+</Sheet>
+
+    </div>
+  )
 }
 
 export default BookingSection

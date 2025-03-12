@@ -54,12 +54,12 @@ function Header() {
           />
   </DropdownMenuTrigger>
   <DropdownMenuContent>
-    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+    <DropdownMenuLabel>Mon Comptes</DropdownMenuLabel>
     <DropdownMenuSeparator />
     <DropdownMenuItem>
-     <Link href={'/mybooking'}>My Booking</Link> 
+     <Link href={'/mybooking'}>Mes réservations</Link> 
       </DropdownMenuItem>
-    <DropdownMenuItem onClick={()=>signOut()}>Logout</DropdownMenuItem>
+    <DropdownMenuItem onClick={()=>signOut()}>Déconnexion</DropdownMenuItem>
    
   </DropdownMenuContent>
 </DropdownMenu>

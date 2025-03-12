@@ -125,9 +125,11 @@ const BusinessBookedSlot = async (businessId, date) => {
   return result;
 }
 const GetUserBookingHistory = async (userEmail) => {
-  const query = gql`
-  query GetUserBookingHistory {
-  bookings(where: {userEmail: "`+ userEmail + `"}) {
+  const query = gql`query GetUserBookingHistory {
+  bookings(
+    where: {userEmail: "mohamedoukhajou20@gmail.com"}
+    orderBy: publishedAt_DESC
+  ) {
     businessList {
       name
       images {
