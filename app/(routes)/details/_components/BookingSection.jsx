@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import GlobalApi from '@/app/_Services/GlobalApi';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
+import moment from 'moment';
 
 function BookingSection({ children, business }) {
 
@@ -32,7 +33,7 @@ function BookingSection({ children, business }) {
     }, [date])
 
     const BusinessBookedSlot = () => {
-        GlobalApi.BusinessBookedSlot(business.id, date)
+        GlobalApi.BusinessBookedSlot(business.id,moment(date).format('DD-MMM-yyyy'))
             .then(resp => {
                 console.log(resp)
                 setBookedSlot(resp.bookings)
@@ -64,7 +65,7 @@ function BookingSection({ children, business }) {
 
         GlobalApi.createNewBooking(
             business.id,
-            date,
+            moment(date).format('DD-MMM-YYYY'),
             selectedTime,
             data.user.email,
             data.user.name
@@ -82,9 +83,9 @@ function BookingSection({ children, business }) {
                 toast('Error while creating booking');
             });
     }
-    const isSlotBooked=(time)=>{
-        return bookedSlot.find(item=>item.time==time)
-      }
+    const isSlotBooked = (time) => {
+        return bookedSlot.find(item => item.time == time)
+    }
     return (
         <div>
 
@@ -114,15 +115,15 @@ function BookingSection({ children, business }) {
                             <h2 className='my-5 font-bold'>Select Time Slot</h2>
                             <div className='grid grid-cols-3 gap-3'>
                                 {timeSlot.map((item, index) => (
-                                     <Button key={index}
-                                     disabled={isSlotBooked(item.time)}
-                                     variant='outiline'
-                                     className={`border rounded-full 
+                                    <Button key={index}
+                                        disabled={isSlotBooked(item.time)}
+                                        variant='outiline'
+                                        className={`border rounded-full 
                                      p-2 px-3 hover:bg-primary
                                       hover:text-white
-                                      ${selectedTime==item.time&&'bg-primary text-white'}`}
-                                     onClick={()=>setSelectedTime(item.time)}
-                                     >{item.time}</Button>
+                                      ${selectedTime == item.time && 'bg-primary text-white'}`}
+                                        onClick={() => setSelectedTime(item.time)}
+                                    >{item.time}</Button>
                                 ))}
                             </div>
 

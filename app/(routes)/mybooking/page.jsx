@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react'
+"use client"
+import React, { useEffect, useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import BookingHistoryList from './_component/BookingHistoryList'
 import { useSession } from 'next-auth/react';
@@ -7,6 +8,7 @@ import GlobalApi from '@/app/_Services/GlobalApi';
 
 function MyBooking() {
     const {data}=useSession();
+    const [bookingHistory,setBookingHistory]=useState([]);
     useEffect(()=>{
         data&&GetUserBookingHistory();
     },[data])
@@ -15,7 +17,7 @@ function MyBooking() {
     const GetUserBookingHistory=()=>{
         GlobalApi.GetUserBookingHistory(data.user.email).then(resp=>{
             console.log(resp);
-           ;
+            setBookingHistory(resp.bookings);
         })
     }
     return (
