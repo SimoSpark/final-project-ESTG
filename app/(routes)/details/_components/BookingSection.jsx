@@ -16,6 +16,8 @@ import GlobalApi from '@/app/_Services/GlobalApi';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import moment from 'moment';
+import PaymentSection from './PaymentSection';
+import StripePayment from './StripePayment';
 
 function BookingSection({children,business}) {
 
@@ -23,6 +25,11 @@ function BookingSection({children,business}) {
     const [timeSlot,setTimeSlot]=useState([]);
     const [selectedTime,setSelectedTime]=useState();
     const [bookedSlot,setBookedSlot]=useState([]);
+    const [showPayment, setShowPayment] = useState(false);
+    const [showStripe, setShowStripe] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+
+
     const {data}=useSession();
     useEffect(()=>{
         getTime();
@@ -33,7 +40,7 @@ function BookingSection({children,business}) {
         date&&BusinessBookedSlot();
     },[date])
 
-   
+  
     const BusinessBookedSlot=()=>{
         GlobalApi.BusinessBookedSlot(business.id,moment(date).format('DD-MMM-yyyy'))
         .then(resp=>{
@@ -64,23 +71,19 @@ function BookingSection({children,business}) {
         setTimeSlot(timeList)
       }
 
-      const saveBooking=()=>{
-            GlobalApi.createNewBooking(business.id,
-                moment(date).format('DD-MMM-yyyy'),selectedTime,data.user.email,data.user.name)
-                .then(resp=>{
-                    console.log(resp);
-                    if(resp)
-                    {
-                        setDate();
-                        setSelectedTime('');
-                        toast('Service Booked successfully!')
-                        // Toast Message
-                    }
-                },(e)=>{
-                    toast('Error while creating booking')
-                    //Error Toast Message
-                })
-      }
+      const saveBooking = () => {
+        GlobalApi.createNewBooking(business.id,
+            moment(date).format('DD-MMM-yyyy'), selectedTime, data.user.email, data.user.name)
+            .then(resp => {
+                if (resp) {
+                    setShowPayment(true);
+                   
+                }
+            }, () => {
+                toast('Erreur lors de la réservation');
+            });
+    };
+    
 
       const isSlotBooked=(time)=>{
         return bookedSlot.find(item=>item.time==time)
@@ -88,7 +91,8 @@ function BookingSection({children,business}) {
     return (
     <div>
         
-        <Sheet>
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+
   <SheetTrigger asChild>
   {children}
   </SheetTrigger>
@@ -129,20 +133,24 @@ function BookingSection({children,business}) {
       </SheetDescription>
     </SheetHeader>
     <SheetFooter className="mt-5">
-              <SheetClose asChild>
-                <div className='flex gap-5'>
-                <Button variant="destructive" 
-                className="">Annuler</Button>
+  {showPayment ? (
+    <PaymentSection 
+      onConfirm={() => {
+        setShowPayment(false);
+        toast('Paiement réussi !');
+      }} 
+      onCancel={() => setShowPayment(false)}
+    />
+  ) : (
+    <div className='flex gap-5'>
+      <Button variant="destructive">Annuler</Button>
+      <Button disabled={!(selectedTime && date)} onClick={() => saveBooking()}>
+        Réserver
+      </Button>
+    </div>
+  )}
+</SheetFooter>
 
-                <Button 
-                disabled={!(selectedTime&&date)}
-                onClick={()=>saveBooking()}
-                >
-                   Réserver</Button>
-                </div>
-             
-              </SheetClose>
-            </SheetFooter>
   </SheetContent>
 </Sheet>
 
