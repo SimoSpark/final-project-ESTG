@@ -54,7 +54,7 @@ function Header() {
           />
   </DropdownMenuTrigger>
   <DropdownMenuContent>
-    <DropdownMenuLabel>Mon Comptes</DropdownMenuLabel>
+    <DropdownMenuLabel>Mon Compte</DropdownMenuLabel>
     <DropdownMenuSeparator />
     <DropdownMenuItem>
      <Link href={'/mybooking'}>Mes réservations</Link> 
